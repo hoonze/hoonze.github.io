@@ -12,11 +12,13 @@ tags: [JAVA, equals, hashCode]
 
 ## equals()란?
 
-equals에 대한 설명
+- 내용 비교 메서드로 해당 주소의 <u>데이터 값을 비교</u>하는 메서드이다.
+- Object의 기본`equals`메서드는 내부적으로 == 연산(참조 비교 연산)을 해 == 과 같은 결과를 리턴한다.
 
 ## hashCode()란?
 
-hashCode에 대한 설명
+- 객체를 식별하는 하나의 정수 값으로 두 객체의 **동일성**을 판단한다.
+- Object의 `hashCode` 메서드는 <u>객체의 메모리 주소값을 이용해 해시값을 리턴</u>하는 메서드이다. 	
 
 ## 1. 단순비교
 
@@ -98,7 +100,8 @@ public class Person {
 		
 		Person person = (Person)o;
 		
-		return person.name.equals(this.name) && Integer.compare(person.age, age) == 0;
+		return person.name.equals(this.name) 
+            && Integer.compare(person.age, age) == 0;
 	}
 }
 ```
@@ -222,6 +225,6 @@ Person 클래스에 주어진 조건에 맞게 `equals` 메서드와 `hashCode`�
 
 ## Reference
 
-- https://donghyeon.dev/이펙티브자바/2021/01/04/eqauls를-재정의-하는-방법/
+- [https://donghyeon.dev/이펙티브자바/2021/01/04/eqauls를-재정의-하는-방법/](https://donghyeon.dev/이펙티브자바/2021/01/04/eqauls를-재정의-하는-방법/)
 
-- https://tecoble.techcourse.co.kr/post/2020-07-29-equals-and-hashCode/
+- [https://tecoble.techcourse.co.kr/post/2020-07-29-equals-and-hashCode/](https://tecoble.techcourse.co.kr/post/2020-07-29-equals-and-hashCode/)
