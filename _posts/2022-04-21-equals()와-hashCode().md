@@ -6,17 +6,19 @@ categories: [Language, JAVA]
 tags: [JAVA, equals, hashCode]
 ---
 
-이 포스트는 면접 과정에서 받은 "HashMap에서 키가 같은지 어떻게 판단하는가?"라는 질문에서 시작됐다. 이 질문을 받을 당시 "Map의 Key값에는 객체가 들어갈 수 도 있는데 기본 정의된 equals 메서드로는 두 객체가 같은지 판단할 수 없다"라고 생각해 제대로된 답변을 하지 못했다. 이 질문에 대한 해답을 찾고자 공부한 내용을 적어본다.
+이 포스트는 면접 과정에서 받은 **"HashMap에서 키가 같은지 어떻게 판단하는가?"**라는 질문에서 시작됐다. 이 질문을 받을 당시 "Map의 Key값에는 객체가 들어갈 수 도 있는데 기본 정의된 equals 메서드로는 두 객체가 같은지 판단할 수 없다"라고 생각해 제대로된 답변을 하지 못했다.
 
-## equals?
+ 이 질문에 대한 해답을 찾고자 공부한 내용을 적어본다.
+
+## equals()란?
 
 equals에 대한 설명
 
-## hashCode?
+## hashCode()란?
 
 hashCode에 대한 설명
 
-## 단순비교
+## 1. 단순비교
 
 Person이라는 객체가 있고, 이름과 나이가 같다면 동일한 객체인지 판단한다고 가정해보자.
 
@@ -51,13 +53,20 @@ public static void main(String[] args) {
 false
 ```
 
-왜 결과값으로 false가 출력이 될까? 그 이유는 두 객체의 주소값이 다르기 때문이다.
+왜 결과값으로 false가 출력이 될까? 그 이유는 **두 객체의 주소값이 다르기 때문**이다.
 
-`equals`메서드는 참조 비교 메서드로 주소값이 다른 두 객체는 서로 다른 객체로 판단한다.
+```java
+// Object의 기본 equals 메서드
+public boolean equals(Object obj) {
+    return (this == obj);
+}
+```
+
+Object 클래스의 기본 `equals`메서드를 살펴보면 참조 비교 연산자인 ==의 결과를 리턴한다. 다시 말해 두 객체의 주소값이 같은지를 보고 동일 객체인지 판단하게 된다. 그렇기 때문에 p1과 p2 객체를 다른 객체로 판단하는 것이다.
 
 p1, p2 두 객체를 논리적으로 같은 객체로 판단하기 위해서는 Person 클래스의 `equals`메서드를 재정의 해야한다.
 
-## equals 재정의
+## 2. equals 재정의
 
 equals를 재정의 하기 위해서는 아래와 같은 규약을 반드시 지켜야 한다.
 
@@ -140,13 +149,13 @@ public static void main(String[] args) {
 2
 ```
 
-결과값이 2로 나온다. 두 객체가 equals메서드로 같은 객체라도 판단이 되어도 HashMap에서는 p1과 p2를 다른 객체로 판단한다. 이유는 무엇일까?
+결과값이 2로 나온다. 두 객체가 equals메서드의 값이 true가 나와도 HashMap에서는 p1과 p2를 다른 객체로 판단한다. 이유는 무엇일까?
 
 이유는 **Hash를 사용한** **Collection(HashMap, HashTable, HashSet 등)은 key를 결정할때 hashCode()를 사용하기 때문**이다.
 
 Collection은 객체가 논리적으로 같은지 판단하기 위해 `hashCode`의 return값이 일치하는지 우선 판단한다. 그 이후 `equals`메서드의 return값이 true라면 두 객체가 논리적으로 같다고 판단한다. 따라서 `hashCode` 메서드를 재정의할 필요가 있다.
 
-## hashCode 재정의
+## 3. hashCode 재정의
 
 문제 해결을 위해 Person 클래스에 `hashCode` 메서드를 재정의해준다.
 
@@ -172,7 +181,8 @@ public class Person {
 		
 		Person person = (Person)o;
 		
-		return person.name.equals(this.name) && Integer.compare(person.age, age) == 0;
+		return person.name.equals(this.name) &&
+            Integer.compare(person.age, age) == 0;
 	}
 	
 	@Override
